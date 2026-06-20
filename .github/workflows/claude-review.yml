@@ -1,0 +1,14 @@
+name: Claude Code Action Review
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Claude Review Action
+        uses: platisd/claude-code-review-action@v1 # Or corresponding public action
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_SECRET_KEY }}
