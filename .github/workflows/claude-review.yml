@@ -1,26 +1,22 @@
 name: Claude Code Action Review
 on:
   pull_request:
-    branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review]
+  issue_comment:
+    types: [created]
 jobs:
   review:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      issues: write
       pull-requests: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Claude Code Action
+        uses: anthropics/claude-code-action@main
         with:
-          node-version: 20
-      - name: Run Claude Code Review
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_SECRET_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm install -g @anthropic-ai/claude-code
-          # Give it the prompt to review the PR
-          claude --print "Please review this Pull Request for naming convention violations based on GROUND_TRUTH.md rules. Focus only on the changed files." || echo "Claude code review finished."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_SECRET_KEY }}
