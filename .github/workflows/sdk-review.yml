@@ -1,0 +1,20 @@
+name: Anthropic SDK Script Review
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install SDK
+        run: npm install @anthropic-ai/sdk @actions/github
+      - name: Run SDK Review Script
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_SECRET_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/review.js
